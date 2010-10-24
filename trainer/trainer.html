@@ -1,0 +1,28 @@
+<html>
+<head>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+	<script type="text/javascript" src="raphael-min.js"></script>
+	<script type="text/javascript" src="trainer.js"></script>
+</head>
+<body>
+	<h1>Super Trainer</h1>
+	<div id="screen"></div>
+	
+	<div style="float: left;">
+	    <form id="symbol_form">
+            <p>Symbol: <input name="symbol" type="text" /></p>
+            <p>X: <input name="x" type="text" /></p>
+            <p>Y: <input name="y" type="text" /></p>
+            <p>width: <input name="width" type="text" /></p>
+            <p>height: <input name="height" type="text" /></p>
+        </form>
+    </div>
+    
+	<div style="float: left;">    
+        <form id="dump_form">
+            <textarea id="dump_area" rows="20" cols="20"></textarea>
+            <input type="button" value="reload" onclick="trainer.load();" /> 
+        </form>
+    </div>
+</body>
+</html>
