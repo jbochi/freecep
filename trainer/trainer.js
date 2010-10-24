@@ -1,7 +1,9 @@
+/*globals $, Raphael, Math, console, document, parseInt */
+
 var trainer = {};
 
 
-trainer.img_name = "22631-002.bmp"
+trainer.img_name = "22631-002.bmp";
 trainer.img_width = 570;
 trainer.img_height = 120;
 
@@ -85,13 +87,13 @@ trainer.load = function () {
     
     
     trainer.clear();
-    $.each(input, function(index, value) {
+    $.each(input, function (index, value) {
         values = value.split(' ');
         if (values.length === 5 || values.length === 6) {
-            trainer.symbol(parseInt(values[1]),  // X
-                           parseInt(trainer.img_height - values[4]),  // Y
-                           parseInt(values[3] - values[1]),  // Width
-                           parseInt(values[4] - values[2]),  // Height
+            trainer.symbol(parseInt(values[1], 10),  // X
+                           parseInt(trainer.img_height - values[4], 10),  // Y
+                           parseInt(values[3] - values[1], 10),  // Width
+                           parseInt(values[4] - values[2], 10),  // Height
                            values[0]);
         } 
     });
@@ -101,7 +103,7 @@ trainer.load = function () {
 };
 
 trainer.clear = function () {
-    $.each(trainer.symbols, function(index, value) {
+    $.each(trainer.symbols, function (index, value) {
         value.remove();
     });
     
@@ -112,7 +114,7 @@ trainer.clear = function () {
 
 trainer.dump = function () {
     var output = [];
-    $.each(trainer.symbols, function(index, value) {
+    $.each(trainer.symbols, function (index, value) {
         output.push(value.dump());
     });
     $('#dump_area').val(output.join('\n'));
@@ -120,12 +122,10 @@ trainer.dump = function () {
 
 trainer.start = function () {
     var image, screen = document.getElementById("screen");
-    trainer.paper = Raphael(screen, trainer.img_width, trainer.img_height);
+    trainer.paper = new Raphael(screen, trainer.img_width, trainer.img_height);
     image = trainer.paper.image(trainer.img_name, 0, 0, trainer.img_width, trainer.img_height);
     $(screen).mousedown(function (event) {
-        console.log('aa');
         trainer.active_symbol = trainer.symbol(event.offsetX, event.offsetY, 0, 0);
-        //trainer.link_symbol = trainer.active_symbol;
         trainer.draw();
         trainer.active_symbol.link();
     });
@@ -144,41 +144,32 @@ trainer.start = function () {
         trainer.active_symbol = false;
     });
     trainer.draw();
-    
-          
-
-    // 4am. go horse and copy and paste!
-
-    $("#symbol_form [name=symbol]").change(function (event) {
+   
+    $("#symbol_form input[name=symbol]").change(function (event) {
         if (trainer.link_symbol) {
             trainer.link_symbol.symbol = $(this).val();
         }
     });    
-     $("#symbol_form [name=x]").change(function (event) {
-        if (trainer.link_symbol) {
-            trainer.link_symbol.x = $(this).val();
-        }
-    });    
-     $("#symbol_form [name=y]").change(function (event) {
-        if (trainer.link_symbol) {
-            trainer.link_symbol.y = $(this).val();
-        }
-    });    
-    $("#symbol_form [name=width]").change(function (event) {
-        if (trainer.link_symbol) {
-            trainer.link_symbol.width = $(this).val();
-        }
-    });
-    $("#symbol_form [name=height]").change(function (event) {
-        if (trainer.link_symbol) {
-            trainer.link_symbol.height = $(this).val();
-        }
-    });
 
-    $("#symbol_form input").change(function (event) {
-        trainer.link_symbol.draw();
-        trainer.dump();
-        
+    $("#symbol_form input.integer").spinner().bind('spinchange', function (event, ui) {
+        if (trainer.link_symbol) {
+            switch (event.target.name) {
+            case 'x': 
+                trainer.link_symbol.x = $(this).val();  
+                break;
+            case 'y':
+                trainer.link_symbol.y = $(this).val();  
+                break;
+            case 'width':
+                trainer.link_symbol.width = $(this).val();  
+                break;
+            case 'height':
+                trainer.link_symbol.height = $(this).val();
+                break;
+            }
+            trainer.link_symbol.draw();            
+            trainer.dump();
+        }
     });          
     
     /*
