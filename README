@@ -1,0 +1,3 @@
+A ideia do projeto é tentar ler as imagens que o site dos correios gera quando se pesquisa por um cep com tesseract-ocr e disponibilizar isso publicamente via API.
+
+A pasta trainer tem um editor de arquivos de treino em html + javascript para o tesseract.
