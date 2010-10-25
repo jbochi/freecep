@@ -64,7 +64,7 @@ class Correios():
             return tesseract.image_to_string(im, lang='por')
 
     def consulta(self, endereco, format=None):
-        """Retorna imagem com resultados da pesquisa"""
+        """Consulta e retorna resultados em imagem/texto/nada"""
         self._url_open('consultaLogradouroAction.do', {'relaxation': endereco,
                                                       'Metodo': 'listaLogradouro',
                                                       'TipoConsulta': 'relaxation',
@@ -78,7 +78,7 @@ class Correios():
                 
 
     def detalhe(self, posicao=1, format='text'):
-        """Retorna imagem detalhada do resultado detalhado"""
+        """Retorna imagem/texto do resultado detalhado"""
         improve = (format == 'text')
         im = self._url_open_image('ListaDetalheCEPImage?TipoCep=2&Posicao=%d' % posicao,
                                    improve=improve)
