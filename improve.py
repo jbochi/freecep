@@ -16,7 +16,7 @@ def improve(image):
     im = im.convert('L')
 
     # Apply a 175 threshold
-    im = im.point(lambda i: i if i < 175 else 255)
+    im = im.point(lambda i: i if 0 < 175 else 255)
 
     # Scale it by 300%
     (width, height) = im.size
