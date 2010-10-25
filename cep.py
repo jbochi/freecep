@@ -1,8 +1,12 @@
+# url imports
 import cookielib
 import urllib
 import urllib2
 from StringIO import StringIO
+
+# ocr imports
 from PIL import Image
+from tesseract import image_to_string  # http://github.com/hoffstaetter/python-tesseract
 
 URL = 'http://www.buscacep.correios.com.br/servicos/dnec/'
 
@@ -30,12 +34,28 @@ class Correios():
 
         return handle
 
-    def _url_open_image(self, url, data=None, headers=None):
+    def _url_open_image(self, url, data=None, headers=None, improve=False):
         image_handle = self._url_open(url, data, headers)
         image_string = image_handle.read()
         image_buffer = StringIO(image_string)
         im = Image.open(image_buffer)
-        return im    
+        if improve:
+            im = self._improve_image(im)
+            
+        return im
+        
+    def _improve_image(self, im):
+        # Convert the image to grayscale
+        im = im.convert('L')
+
+        # Apply a 175 threshold
+        im = im.point(lambda i: i if i < 175 else 255)
+
+        # Scale it by 300%
+        (width, height) = im.size
+        im = im.resize((width*3, height*3), Image.BICUBIC)
+
+        return im
 
     def consulta(self, endereco, open_image=False):
         """Retorna imagem com resultados da pesquisa"""
@@ -52,11 +72,12 @@ class Correios():
 
     def detalhe(self, posicao=1):
         """Retorna imagem detalhada do resultado detalhado"""
-        return self._url_open_image('ListaDetalheCEPImage?TipoCep=2&Posicao=%d' % posicao)
+        return self._url_open_image('ListaDetalheCEPImage?TipoCep=2&Posicao=%d' % posicao,
+                                    improve=True)
 
 
 if __name__ == '__main__':
     c = Correios()
     im = c.consulta('91370000')
     im = c.detalhe()
-    im.show()   
+    print image_to_string(im, lang='por')
