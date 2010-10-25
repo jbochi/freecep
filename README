@@ -1,3 +1,5 @@
 A ideia do projeto é tentar ler as imagens que o site dos correios gera quando se pesquisa por um cep com tesseract-ocr e disponibilizar isso publicamente via API.
 
 A pasta trainer tem um editor de arquivos de treino em html + javascript para o tesseract.
+
+O script improve.py tenta melhorar as imagens obtidas do site dos correios de modo que fique mais fácil para o OCR processar elas.

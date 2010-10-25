@@ -1,10 +1,8 @@
 #! /usr/bin/env python
-# aplicar threshold 175
-# aumentar o tamanho em 300% usando cubic
-# conveter para indexado (PB)
 import sys
 import getopt
 from PIL import Image
+
 
 def improve(image):
 
