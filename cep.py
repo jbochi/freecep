@@ -6,7 +6,7 @@ from StringIO import StringIO
 
 # ocr imports
 from PIL import Image
-from tesseract import image_to_string  # http://github.com/hoffstaetter/python-tesseract
+import tesseract  # http://github.com/hoffstaetter/python-tesseract
 
 URL = 'http://www.buscacep.correios.com.br/servicos/dnec/'
 
@@ -57,7 +57,13 @@ class Correios():
 
         return im
 
-    def consulta(self, endereco, open_image=False):
+    def _format(self, im, format):
+        if format == 'image':
+            return im
+        elif format == 'text':
+            return tesseract.image_to_string(im, lang='por')
+
+    def consulta(self, endereco, format=None):
         """Retorna imagem com resultados da pesquisa"""
         self._url_open('consultaLogradouroAction.do', {'relaxation': endereco,
                                                       'Metodo': 'listaLogradouro',
@@ -65,19 +71,27 @@ class Correios():
                                                       'StartRow': '1',
                                                       'EndRow': '10'})
 
-        if open_image:
-            im = self._url_open_image('ListaLogradouroImage?paramx=nullnullnullnullrelaxationnullnull')
+        if format == 'image' or format == 'text':
+            improve = (format == 'text')
+            im = self._url_open_image('ListaLogradouroImage', improve=improve)
+            return self._format(im, format)
+                
 
-            return im
-
-    def detalhe(self, posicao=1):
+    def detalhe(self, posicao=1, format='text'):
         """Retorna imagem detalhada do resultado detalhado"""
-        return self._url_open_image('ListaDetalheCEPImage?TipoCep=2&Posicao=%d' % posicao,
-                                    improve=True)
-
+        improve = (format == 'text')
+        im = self._url_open_image('ListaDetalheCEPImage?TipoCep=2&Posicao=%d' % posicao,
+                                   improve=improve)
+        return self._format(im, format)
+        
 
 if __name__ == '__main__':
     c = Correios()
-    im = c.consulta('91370000')
-    im = c.detalhe()
-    print image_to_string(im, lang='por')
+    
+    # exemplo com imagens
+    c.consulta('91370000', format='image').show()
+    c.detalhe(format='image').show()
+    
+    # exemplo com texto
+    print c.consulta('91370000', format='text')
+    print c.detalhe(format='text')
