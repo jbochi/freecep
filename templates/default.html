@@ -1,0 +1,16 @@
+<!doctype html>
+<title>Busca nos correios</title>
+
+
+<h1>Free CEP</h1>
+<form method="POST" action=".">
+    {{ form.csrf }}
+    <label>{{ form.query.label }}:</label>
+    {{ form.query(size=20) }}
+    <input type="submit" value="Go">
+</form>
+
+{% if resultado %}
+    <h2>Resultado da busca:</h2>
+    <p>{{ resultado }}</p>
+{% endif %}
