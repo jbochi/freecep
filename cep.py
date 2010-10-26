@@ -61,7 +61,7 @@ class Correios():
         if format == 'image':
             return im
         elif format == 'text':
-            return tesseract.image_to_string(im, lang='por')
+            return tesseract.image_to_string(im, lang='por').decode('utf-8')
 
     def consulta(self, endereco, format=None):
         """Consulta e retorna resultados em imagem/texto/nada"""
