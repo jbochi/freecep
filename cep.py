@@ -6,7 +6,7 @@ from StringIO import StringIO
 
 # ocr imports
 from PIL import Image
-import tesseract  # http://github.com/hoffstaetter/python-tesseract
+import tesseract  # http://github.com/jbochi/python-tesseract
 
 URL = 'http://www.buscacep.correios.com.br/servicos/dnec/'
 
@@ -60,26 +60,27 @@ class Correios():
     def _format(self, im, format):
         if format == 'image':
             return im
-        elif format == 'text':
-            return tesseract.image_to_string(im, lang='por').decode('utf-8')
+        elif format == 'text' or format == 'boxes':
+            boxes = (format == 'boxes')
+            return tesseract.image_to_string(im, lang='por', boxes=boxes).decode('utf-8')
 
     def consulta(self, endereco, format=None):
-        """Consulta e retorna resultados em imagem/texto/nada"""
+        """Consulta e retorna resultados em imagem/texto/boxes/nada"""
         self._url_open('consultaLogradouroAction.do', {'relaxation': endereco,
                                                       'Metodo': 'listaLogradouro',
                                                       'TipoConsulta': 'relaxation',
                                                       'StartRow': '1',
                                                       'EndRow': '10'})
 
-        if format == 'image' or format == 'text':
-            improve = (format == 'text')
+        if format:
+            improve = (format != 'image')            
             im = self._url_open_image('ListaLogradouroImage', improve=improve)
             return self._format(im, format)
                 
 
     def detalhe(self, posicao=1, format='text'):
-        """Retorna imagem/texto do resultado detalhado"""
-        improve = (format == 'text')
+        """Retorna imagem/texto/boxes do resultado detalhado"""
+        improve = (format != 'image')
         im = self._url_open_image('ListaDetalheCEPImage?TipoCep=2&Posicao=%d' % posicao,
                                    improve=improve)
         return self._format(im, format)
