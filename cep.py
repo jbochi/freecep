@@ -34,17 +34,21 @@ class Correios():
 
         return handle
 
-    def _url_open_image(self, url, data=None, headers=None, improve=False):
+    def _url_open_image(self, url, data=None, headers=None):
         image_handle = self._url_open(url, data, headers)
         image_string = image_handle.read()
         image_buffer = StringIO(image_string)
         im = Image.open(image_buffer)
-        if improve:
-            im = self._improve_image(im)
-            
         return im
+
+    def _format(self, im, format):
+        if format == 'image':
+            return im
+        elif format == 'text' or format == 'boxes':
+            boxes = (format == 'boxes')
+            return self.to_text(im, boxes)
         
-    def _improve_image(self, im):
+    def improve_image(self, im):
         # Convert the image to grayscale
         im = im.convert('L')
 
@@ -57,12 +61,10 @@ class Correios():
 
         return im
 
-    def _format(self, im, format):
-        if format == 'image':
-            return im
-        elif format == 'text' or format == 'boxes':
-            boxes = (format == 'boxes')
-            return tesseract.image_to_string(im, lang='por', boxes=boxes).decode('utf-8')
+    def to_text(self, im, boxes=False, improve=True):
+        if improve:
+            im = self.improve_image(im)
+        return tesseract.image_to_string(im, lang='por', boxes=boxes).decode('utf-8')
 
     def consulta(self, endereco, format=None):
         """Consulta e retorna resultados em imagem/texto/boxes/nada"""
@@ -73,16 +75,14 @@ class Correios():
                                                       'EndRow': '10'})
 
         if format:
-            improve = (format != 'image')            
-            im = self._url_open_image('ListaLogradouroImage', improve=improve)
+            im = self._url_open_image('ListaLogradouroImage')
             return self._format(im, format)
                 
 
     def detalhe(self, posicao=1, format='text'):
         """Retorna imagem/texto/boxes do resultado detalhado"""
         improve = (format != 'image')
-        im = self._url_open_image('ListaDetalheCEPImage?TipoCep=2&Posicao=%d' % posicao,
-                                   improve=improve)
+        im = self._url_open_image('ListaDetalheCEPImage?TipoCep=2&Posicao=%d' % posicao)
         return self._format(im, format)
         
 
