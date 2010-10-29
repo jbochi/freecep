@@ -3,6 +3,7 @@ import sys
 import getopt
 from PIL import Image
 
+import cep
 
 def improve(image):
 
@@ -12,15 +13,8 @@ def improve(image):
         print "Error: Unable to open '{0}'".format(image)
         return None
 
-    # Convert the image to grayscale
-    im = im.convert('L')
-
-    # Apply a 175 threshold
-    im = im.point(lambda i: i if 0 < 175 else 255)
-
-    # Scale it by 300%
-    (width, height) = im.size
-    im = im.resize((width*3, height*3), Image.BICUBIC)
+    c = cep.Correios()
+    im = c._improve_image(im)    
 
     return im
 
