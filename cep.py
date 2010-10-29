@@ -78,7 +78,6 @@ class Correios():
             im = self._url_open_image('ListaLogradouroImage')
             return self._format(im, format)
                 
-
     def detalhe(self, posicao=1, format='text'):
         """Retorna imagem/texto/boxes do resultado detalhado"""
         improve = (format != 'image')
