@@ -170,13 +170,7 @@ trainer.start = function () {
         }
     });          
     
-    /*
-    $("#symbol_form [name=x]").val(that.x);
-    $("#symbol_form [name=y]").val(that.y);
-    $("#symbol_form [name=width]").val(that.width);
-    $("#symbol_form [name=height]").val(that.height);
-    */
-    
+    trainer.load();    
 };
 
 trainer.draw = function () {

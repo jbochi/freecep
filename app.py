@@ -2,7 +2,7 @@ from PIL import Image
 import tempfile
 import os
 
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, redirect, request, render_template, url_for
 from flaskext.sqlalchemy import SQLAlchemy
 from flaskext.wtf import Form, TextField, Required
 
@@ -54,12 +54,16 @@ def main():
     return render_template('default.html', form=form)
 
 
-@app.route("/<int:id>")
+@app.route("/<int:id>", methods=['GET', 'POST'])
 def edit_record(id):
     search = Search.query.get_or_404(id)
+    if request.method == 'POST':
+        search.boxes = request.form['boxes']
+        db.session.add(search)
+        db.session.commit()
 
     im = Image.open(os.path.join(images_path, search.filename))
-    width, height = im.size
+    width, height = im.size    
 
     image_data = {'path': '/static/images/%s' % search.filename,
                   'width': width,

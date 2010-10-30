@@ -95,10 +95,11 @@
         </form>
     </div>
     
-	<div style="float: left;">    
-        <form id="dump_form">
-            <textarea id="dump_area" rows="20" cols="20">{{ search.boxes }}</textarea>
+	<div style="float: left; margin-left:20px;">
+        <form id="dump_form" action="/{{ search.id }}" method="POST">
+            <textarea id="dump_area" name="boxes" rows="20" cols="20">{{ search.boxes }}</textarea>
             <input type="button" value="reload" onclick="trainer.load();" /> 
+            <input type="submit" value="save" />
         </form>
     </div>   
 </body>
