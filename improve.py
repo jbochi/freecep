@@ -14,7 +14,7 @@ def improve(image):
         return None
 
     c = cep.Correios()
-    im = c._improve_image(im)    
+    im = c.improve_image(im)    
 
     return im
 

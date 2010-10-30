@@ -1,0 +1,105 @@
+<html>
+<head>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/1.6rc2/ui/ui.core.js"></script>
+    <script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/1.6rc2/ui/ui.spinner.js"></script>
+	<script type="text/javascript" src="/static/raphael-min.js"></script>
+    <script type="text/javascript">var img = {{ image_data|tojson|safe }}</script>	
+	<script type="text/javascript" src="/static/trainer.js"></script>
+    
+    <style type="text/css">
+    label {
+	    float: left;
+	    margin-right: .5em;
+	    padding: .15em 0;
+	    font-weight: bold;
+    }
+    
+    input[type="text"] {
+        width: 5em;
+    }
+    
+    /* UI Spinner */
+    .ui-spinner {
+        width: 5em;    
+	    display: block;
+	    position: relative;	    
+	    overflow: hidden;
+	    border: 1px solid #999;
+	    background: #FEFEFE repeat-x left bottom; //url(../images/spinner-bg.gif)
+	    padding: 0 5px;
+    }
+
+    .ui-spinner-disabled {
+	    background: #F4F4F4;
+	    color: #CCC;
+    }
+
+    .ui-spinner-box {
+	    width: 90%;
+	    /* height: 100%; */
+	    float: left;
+	    /* font-size: 125%; */
+	    border: none;
+	    background: none;
+	    padding: 0;
+    }
+
+    .ui-spinner-up,
+    .ui-spinner-down {
+	    width: 10%;
+	    height: 50%;
+	    font-size: 0.5em;
+	    padding: 0;
+	    margin: 0;
+	    z-index: 100;
+	    text-align: center;
+	    vertical-align: middle;
+	    position: absolute;
+	    right: 0;
+	    cursor: default;
+	    border: 1px solid #999;
+	    border-right: none;
+	    border-top: none;
+    }
+
+    .ui-spinner-down {
+	    bottom: 0;
+	    border-bottom: 0;
+    }
+
+    .ui-spinner-pressed {
+	    background: #FEFEFE;
+    }
+
+    .ui-spinner-list,
+    .ui-spinner-listitem {
+	    margin: 0;
+	    padding: 0;
+    }
+    </style>
+</head>
+<body>
+	<h1>Super Trainer</h1>
+	<p>Search for: {{ search.search }}</p>
+	<p>Text: {{ search.text }}</p>
+	<div id="screen"></div>
+	
+	<div style="float: left;">
+	    <form id="symbol_form">
+            <p><label for="symbol">Symbol: </label><input name="symbol" type="text" /></p>
+            <p><label for="symbol">X: </label><input name="x" type="text" class="integer" /></p>
+            <p><label for="symbol">Y: </label><input name="y" type="text" class="integer" /></p>
+            <p><label for="symbol">width: </label><input name="width" type="text" class="integer" /></p>
+            <p><label for="symbol">height: </label><input name="height" type="text" class="integer" /></p>
+        </form>
+    </div>
+    
+	<div style="float: left;">    
+        <form id="dump_form">
+            <textarea id="dump_area" rows="20" cols="20">{{ search.boxes }}</textarea>
+            <input type="button" value="reload" onclick="trainer.load();" /> 
+        </form>
+    </div>   
+</body>
+</html>
