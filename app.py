@@ -9,9 +9,10 @@ from flaskext.wtf import Form, TextField, Required
 import cep
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite'
+app.config.from_object('freecep.default_settings')
+app.config.from_envvar('FREECEP_SETTINGS')
+
 db = SQLAlchemy(app)
-images_path = os.path.join(os.path.abspath('static'), 'images')
 
 class Search(db.Model):
     __tablename__ = 'search'
@@ -38,9 +39,9 @@ def main():
         text = correios.to_text(im_improved, improve=False)
         boxes = correios.to_text(im_improved, improve=False, boxes=True)
 
-        filename = tempfile.mkstemp(dir=images_path, text=True, suffix='.png')[1]
-        filename = os.path.relpath(filename, images_path)
-        im_improved.save(os.path.join(images_path, filename))
+        filename = tempfile.mkstemp(dir=app.config['IMAGES_PATH'], text=True, suffix='.png')[1]
+        filename = os.path.relpath(filename, app.config['IMAGES_PATH'])
+        im_improved.save(os.path.join(app.config['IMAGES_PATH'], filename))
 
         search = Search(search=unicode(form.query.data),
                         filename=filename,
@@ -62,7 +63,7 @@ def edit_record(id):
         db.session.add(search)
         db.session.commit()
 
-    im = Image.open(os.path.join(images_path, search.filename))
+    im = Image.open(os.path.join(app.config['IMAGES_PATH'], search.filename))
     width, height = im.size
 
     image_data = {'path': '/static/images/%s' % search.filename,
