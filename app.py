@@ -9,8 +9,8 @@ from flaskext.wtf import Form, TextField, Required
 import cep
 
 app = Flask(__name__)
-app.config.from_object('freecep.default_settings')
-app.config.from_envvar('FREECEP_SETTINGS')
+app.config.from_object('default_settings')
+#app.config.from_envvar('FREECEP_SETTINGS')
 
 db = SQLAlchemy(app)
 
