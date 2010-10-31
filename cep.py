@@ -70,7 +70,7 @@ class Correios():
 
     def consulta(self, endereco, format=None):
         """Consulta e retorna resultados em imagem/texto/boxes/nada"""
-        self._url_open('consultaLogradouroAction.do', {'relaxation': endereco,
+        self._url_open('consultaLogradouroAction.do', {'relaxation': endereco.encode('ISO-8859-1'),
                                                       'Metodo': 'listaLogradouro',
                                                       'TipoConsulta': 'relaxation',
                                                       'StartRow': '1',
