@@ -36,7 +36,7 @@ def main():
         im = correios.detalhe(format='image')
         im_improved = correios.improve_image(im)
         text = correios.to_text(im_improved, improve=False)
-        boxes = correios.to_text(im_improved, improve=False)
+        boxes = correios.to_text(im_improved, improve=False, boxes=True)
 
         filename = tempfile.mkstemp(dir=images_path, text=True, suffix='.png')[1]
         filename = os.path.relpath(filename, images_path)

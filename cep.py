@@ -27,7 +27,7 @@ class Correios():
     def _url_open(self, url, data=None, headers=None):
         if headers == None:
             headers = {}
-            
+
         headers['User-agent'] = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         req = urllib2.Request(URL + url, urllib.urlencode(data) if data else None, headers)
         handle = urllib2.urlopen(req)
@@ -47,7 +47,7 @@ class Correios():
         elif format == 'text' or format == 'boxes':
             boxes = (format == 'boxes')
             return self.to_text(im, boxes)
-        
+
     def improve_image(self, im):
         # Convert the image to grayscale
         im = im.convert('L')
@@ -61,10 +61,12 @@ class Correios():
 
         return im
 
-    def to_text(self, im, boxes=False, improve=True):
+    def to_text(self, im, boxes=False, improve=True, lang='por'):
         if improve:
             im = self.improve_image(im)
-        return tesseract.image_to_string(im, lang='por', boxes=boxes).decode('utf-8')
+        if boxes:
+            lang=None
+        return tesseract.image_to_string(im, lang=lang, boxes=boxes).decode('utf-8')
 
     def consulta(self, endereco, format=None):
         """Consulta e retorna resultados em imagem/texto/boxes/nada"""
@@ -77,21 +79,21 @@ class Correios():
         if format:
             im = self._url_open_image('ListaLogradouroImage')
             return self._format(im, format)
-                
+
     def detalhe(self, posicao=1, format='text'):
         """Retorna imagem/texto/boxes do resultado detalhado"""
         improve = (format != 'image')
         im = self._url_open_image('ListaDetalheCEPImage?TipoCep=2&Posicao=%d' % posicao)
         return self._format(im, format)
-        
+
 
 if __name__ == '__main__':
     c = Correios()
-    
+
     # exemplo com imagens
     c.consulta('91370000', format='image').show()
     c.detalhe(format='image').show()
-    
+
     # exemplo com texto
     print c.consulta('91370000', format='text')
     print c.detalhe(format='text')
