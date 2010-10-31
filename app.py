@@ -74,4 +74,4 @@ def edit_record(id):
 if __name__ == "__main__":
     app.secret_key = 'as_seen_on_github'
     app.debug = True
-    app.run(host='0.0.0.0' port=57814)
+    app.run(host='0.0.0.0', port=57814)
