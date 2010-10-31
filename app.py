@@ -36,7 +36,7 @@ def main():
         im = correios.detalhe(format='image')
         im_improved = correios.improve_image(im)
         text = correios.to_text(im_improved, improve=False)
-        boxes = correios.to_text(im_improved, improve=False, boxes=True)
+        boxes = correios.to_text(im_improved, improve=False)
 
         filename = tempfile.mkstemp(dir=images_path, text=True, suffix='.png')[1]
         filename = os.path.relpath(filename, images_path)
@@ -63,7 +63,7 @@ def edit_record(id):
         db.session.commit()
 
     im = Image.open(os.path.join(images_path, search.filename))
-    width, height = im.size    
+    width, height = im.size
 
     image_data = {'path': '/static/images/%s' % search.filename,
                   'width': width,
