@@ -3,3 +3,8 @@ A ideia do projeto é tentar ler as imagens que o site dos correios gera quando 
 A pasta trainer tem um editor de arquivos de treino em html + javascript para o tesseract.
 
 O script improve.py tenta melhorar as imagens obtidas do site dos correios de modo que fique mais fácil para o OCR processar elas.
+
+
+
+****UPDATE*****:
+O site dos correios não utliza mais imagens para retornar o resultado da busca. Utilize este outro projeto: https://github.com/jbochi/cep
